@@ -3,31 +3,35 @@ const readline = require('readline').createInterface({
   output: process.stdout
 });
 
-readline.question('', n => {
-  readline.question('', arr => {
+readline.question('Enter the target number: ', target => {
+  target = Number(target);
+  readline.question('Enter the array elements separated by space: ', arr => {
     arr = arr.split(' ').map(Number);
-    let ans = ArrayProblem6(n, arr);
-    console.log(ans);
+    let ans = threeSum(arr, target);
+    console.log(`The sum that is closest to the target is: ${ans}`);
     readline.close();
   });
 });
 
-function ArrayProblem6(n, arr) {
-  // Write code here
-	let res = arr.length;
-	for (let i = 0; i < arr.length; i++) {
-		for (let j = i+1; j < arr.length; j++) {
-			if (arr[i]>0 && arr[j]>0 && arr[i]%2 === 0 && arr[j]%2 === 0) {
-				let difference = j-i;
-				if (difference < res) {
-					res = difference;
-				}
-			}
-		}
-	}
+function threeSum(nums, target) {
+  nums.sort((a, b) => a - b);  // Sort the array
+  let closestSum = nums[0] + nums[1] + nums[2];  // Initialize closestSum with the sum of the first three elements
 
-	if (res === arr.length) {
-		return -1;
-	} 
-	return res;
+  for (let i = 0; i < nums.length - 2; i++) {
+    let left = i + 1;
+    let right = nums.length - 1;
+    
+    while (left < right) {
+      let currentSum = nums[i] + nums[left] + nums[right];
+      if (Math.abs(currentSum - target) < Math.abs(closestSum - target)) {
+        closestSum = currentSum;  // Update closestSum if the currentSum is closer to the target
+      }
+      if (currentSum < target) {
+        left++;  // Move the left pointer to the right
+      } else {
+        right--;  // Move the right pointer to the left
+      }
+    }
+  }
+  return closestSum;
 }
