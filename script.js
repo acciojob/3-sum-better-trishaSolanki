@@ -1,34 +1,34 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
-const port = 3000;
+function threeSum(S, target) {
+    // Sort the array first
+    S.sort((a, b) => a - b);
 
-app.use(bodyParser.json());
+    let closestSum = Infinity;
 
-function threeSum(nums, target) {
-  nums.sort((a, b) => a - b); // Sort the array
-  let closestSum = nums[0] + nums[1] + nums[2]; // Initialize closestSum with the sum of the first three elements
+    for (let i = 0; i < S.length - 2; i++) {
+        let left = i + 1;
+        let right = S.length - 1;
 
-  for (let i = 0; i < nums.length - 2; i++) {
-    let left = i + 1;
-    let right = nums.length - 1;
+        while (left < right) {
+            const currentSum = S[i] + S[left] + S[right];
 
-    while (left < right) {
-      let currentSum = nums[i] + nums[left] + nums[right];
-      if (Math.abs(currentSum - target) < Math.abs(closestSum - target)) {
-        closestSum = currentSum; // Update closestSum if the currentSum is closer to the target
-      }
-      if (currentSum < target) {
-        left++; // Move the left pointer to the right
-      } else {
-        right--; // Move the right pointer to the left
-      }
+            if (Math.abs(currentSum - target) < Math.abs(closestSum - target)) {
+                closestSum = currentSum;
+            }
+
+            if (currentSum < target) {
+                left++;
+            } else if (currentSum > target) {
+                right--;
+            } else {
+                return closestSum; // If the exact sum is found
+            }
+        }
     }
-  }
-  return closestSum;
+
+    return closestSum;
 }
 
-app.post('/threesum', (req, res) => {
-  const { arr, target } = req.body;
-  if (!arr || !target) {
-    return res.status(
+// Example usage:
+const S = [-1, 2, 1, -4];
+const target = 1;
+console.log(threeSum(S, target)); // Output: 2
